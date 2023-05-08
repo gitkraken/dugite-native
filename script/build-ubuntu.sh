@@ -72,11 +72,11 @@ source "$CURRENT_DIR/check-static-linking.sh"
 
 echo " -- Building vanilla curl at $CURL_INSTALL_DIR instead of distro-specific version"
 
-CURL_FILE_NAME="curl-7.61.1"
+CURL_FILE_NAME="curl-7.29.0"
 CURL_FILE="$CURL_FILE_NAME.tar.gz"
 
 cd /tmp || exit 1
-curl -LO "https://curl.haxx.se/download/$CURL_FILE"
+curl -LO "https://curl.haxx.se/download/archeology/$CURL_FILE"
 tar -xf $CURL_FILE
 
 (

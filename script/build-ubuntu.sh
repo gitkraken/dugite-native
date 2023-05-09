@@ -31,13 +31,15 @@ case "$TARGET_ARCH" in
     export CC="gcc"
     STRIP="strip"
     HOST=""
-    TARGET="" ;;
+    TARGET=""
+    OSSL_TARGET="linux-x86_64" ;;
   "x86")
     DEPENDENCY_ARCH="x86"
     export CC="i686-linux-gnu-gcc"
     STRIP="i686-gnu-strip"
     HOST="--host=i686-linux-gnu"
-    TARGET="--target=i686-linux-gnu" ;;
+    TARGET="--target=i686-linux-gnu"
+    OSSL_TARGET="linux-generic32" ;;
   "arm64")
     # __GLIBC_MINOR__ is used as a feature test macro.  Replace it with the
     # earliest supported version of glibc 2.17 as was previously the case when building on ubuntu-18.04
@@ -48,13 +50,15 @@ case "$TARGET_ARCH" in
     export CC="aarch64-linux-gnu-gcc"
     STRIP="aarch64-linux-gnu-strip"
     HOST="--host=aarch64-linux-gnu"
-    TARGET="--target=aarch64-linux-gnu" ;;
+    TARGET="--target=aarch64-linux-gnu"
+    OSSL_TARGET="linux-aarch64" ;;
   "arm")
     DEPENDENCY_ARCH="arm"
     export CC="arm-linux-gnueabihf-gcc"
     STRIP="arm-linux-gnueabihf-strip"
     HOST="--host=arm-linux-gnueabihf"
-    TARGET="--target=arm-linux-gnueabihf" ;;
+    TARGET="--target=arm-linux-gnueabihf"
+    OSSL_TARGET="linux-armv4" ;;
   *)
     exit 1 ;;
 esac
@@ -91,13 +95,14 @@ unset TARGET_ARCH
 # - no-comp: not used by libcurl
 # - no-dso: libcurl won't respect libssl saying it needs -ldl
 # - no-engine: disabled because
-./config \
+./Configure \
+  "$OSSL_TARGET" \
+  shared \
   no-ssl2 \
   no-ssl3 \
   no-comp \
   no-dso \
   no-engine \
-  -fPIC \
   --prefix="$OSSL_INSTALL_DIR" \
   --openssldir="$OSSL_INSTALL_DIR"
 

@@ -70,6 +70,41 @@ source "$CURRENT_DIR/compute-checksum.sh"
 # shellcheck source=script/check-static-linking.sh
 source "$CURRENT_DIR/check-static-linking.sh"
 
+echo " -- Building vanilla OpenSSL at $OSSL_INSTALL_DIR instead of distro-specific version"
+
+OSSL_FILE_NAME="openssl-1.0.2u"
+OSSL_FILE="$OSSL_FILE_NAME.tar.gz"
+
+cd /tmp || exit 1
+curl -LO "https://www.openssl.org/source/$OSSL_FILE"
+tar -xf $OSSL_FILE
+
+(
+cd $OSSL_FILE_NAME || exit 1
+
+# this will conflict with a variable in the makefile
+unset TARGET_ARCH
+
+# flags:
+# - no-ssl2: deprecated
+# - no-ssl3: deprecated
+# - no-comp: not used by libcurl
+# - no-dso: libcurl won't respect libssl saying it needs -ldl
+# - no-engine: disabled because
+./config \
+  no-ssl2 \
+  no-ssl3 \
+  no-comp \
+  no-dso \
+  no-engine \
+  -fPIC \
+  --prefix="$OSSL_INSTALL_DIR" \
+  --openssldir="$OSSL_INSTALL_DIR"
+
+make depend
+make build_libs
+make install
+)
 echo " -- Building vanilla curl at $CURL_INSTALL_DIR instead of distro-specific version"
 
 CURL_FILE_NAME="curl-7.29.0"
@@ -81,11 +116,14 @@ tar -xf $CURL_FILE
 
 (
 cd $CURL_FILE_NAME || exit 1
+
+export LDFLAGS="-Wl,-R$OSSL_INSTALL_DIR/lib"
+
 ./configure \
   --enable-threaded-resolver \
   --enable-tls-srp \
   --prefix="$CURL_INSTALL_DIR" \
-  --with-ssl \
+  --with-ssl="$OSSL_INSTALL_DIR" \
   "$HOST" "$TARGET"
 make install
 )

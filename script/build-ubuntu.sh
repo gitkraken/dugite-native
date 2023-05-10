@@ -31,13 +31,15 @@ case "$TARGET_ARCH" in
     export CC="gcc"
     STRIP="strip"
     HOST=""
-    TARGET="" ;;
+    TARGET=""
+    OSSL_TARGET="linux-x86_64" ;;
   "x86")
     DEPENDENCY_ARCH="x86"
     export CC="i686-linux-gnu-gcc"
     STRIP="i686-gnu-strip"
     HOST="--host=i686-linux-gnu"
-    TARGET="--target=i686-linux-gnu" ;;
+    TARGET="--target=i686-linux-gnu"
+    OSSL_TARGET="linux-generic32" ;;
   "arm64")
     # __GLIBC_MINOR__ is used as a feature test macro.  Replace it with the
     # earliest supported version of glibc 2.17 as was previously the case when building on ubuntu-18.04
@@ -48,13 +50,15 @@ case "$TARGET_ARCH" in
     export CC="aarch64-linux-gnu-gcc"
     STRIP="aarch64-linux-gnu-strip"
     HOST="--host=aarch64-linux-gnu"
-    TARGET="--target=aarch64-linux-gnu" ;;
+    TARGET="--target=aarch64-linux-gnu"
+    OSSL_TARGET="linux-aarch64" ;;
   "arm")
     DEPENDENCY_ARCH="arm"
     export CC="arm-linux-gnueabihf-gcc"
     STRIP="arm-linux-gnueabihf-strip"
     HOST="--host=arm-linux-gnueabihf"
-    TARGET="--target=arm-linux-gnueabihf" ;;
+    TARGET="--target=arm-linux-gnueabihf"
+    OSSL_TARGET="linux-armv4" ;;
   *)
     exit 1 ;;
 esac
@@ -70,18 +74,62 @@ source "$CURRENT_DIR/compute-checksum.sh"
 # shellcheck source=script/check-static-linking.sh
 source "$CURRENT_DIR/check-static-linking.sh"
 
+echo " -- Building vanilla OpenSSL at $OSSL_INSTALL_DIR instead of distro-specific version"
+
+OSSL_FILE_NAME="openssl-1.0.2u"
+OSSL_FILE="$OSSL_FILE_NAME.tar.gz"
+
+cd /tmp || exit 1
+curl -LO "https://www.openssl.org/source/$OSSL_FILE"
+tar -xf $OSSL_FILE
+
+(
+cd $OSSL_FILE_NAME || exit 1
+
+# this will conflict with a variable in the makefile
+unset TARGET_ARCH
+
+# flags:
+# - no-ssl2: deprecated
+# - no-ssl3: deprecated
+# - no-comp: not used by libcurl
+# - no-dso: libcurl won't respect libssl saying it needs -ldl
+# - no-engine: disabled because
+./Configure \
+  "$OSSL_TARGET" \
+  shared \
+  no-ssl2 \
+  no-ssl3 \
+  no-comp \
+  no-dso \
+  no-engine \
+  --prefix="$OSSL_INSTALL_DIR" \
+  --openssldir="$OSSL_INSTALL_DIR"
+
+make depend
+make build_libs
+make install
+)
 echo " -- Building vanilla curl at $CURL_INSTALL_DIR instead of distro-specific version"
 
-CURL_FILE_NAME="curl-7.61.1"
+CURL_FILE_NAME="curl-7.29.0"
 CURL_FILE="$CURL_FILE_NAME.tar.gz"
 
 cd /tmp || exit 1
-curl -LO "https://curl.haxx.se/download/$CURL_FILE"
+curl -LO "https://curl.haxx.se/download/archeology/$CURL_FILE"
 tar -xf $CURL_FILE
 
 (
 cd $CURL_FILE_NAME || exit 1
-./configure --prefix="$CURL_INSTALL_DIR" "$HOST" "$TARGET"
+
+export LDFLAGS="-Wl,-R$OSSL_INSTALL_DIR/lib"
+
+./configure \
+  --enable-threaded-resolver \
+  --enable-tls-srp \
+  --prefix="$CURL_INSTALL_DIR" \
+  --with-ssl="$OSSL_INSTALL_DIR" \
+  "$HOST" "$TARGET"
 make install
 )
 echo " -- Building git at $SOURCE to $DESTINATION"

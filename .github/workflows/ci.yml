@@ -27,7 +27,6 @@ jobs:
       matrix:
         os: [macos-11, windows-2019, ubuntu-20.04]
         arch: [x86, x64]
-        go: [1.16.3]
         include:
           - os: macos-11
             friendlyName: macOS
@@ -36,7 +35,6 @@ jobs:
             friendlyName: macOS
             targetPlatform: macOS
             arch: arm64
-            go: 1.16.3
           - os: windows-2019
             friendlyName: Windows
             targetPlatform: win32
@@ -69,10 +67,9 @@ jobs:
           submodules: recursive
           # Needed for script/package.sh to work
           fetch-depth: 0
-      - name: Use go ${{ matrix.go }}
+      - name: Install go
+        if: matrix.targetPlatform == 'macOS'
         uses: actions/setup-go@v2
-        with:
-          go-version: ${{ matrix.go }}
       - name: Install dependencies
         run: npm install
       - name: Check formatting

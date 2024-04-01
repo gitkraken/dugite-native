@@ -5,16 +5,16 @@
       {
         "platform": "windows",
         "arch": "amd64",
-        "filename": "MinGit-2.43.0-64-bit.zip",
-        "url": "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/MinGit-2.43.0-64-bit.zip",
-        "checksum": "1905d93068e986258fafc69517df8fddff829bb2a289c1fa4dcc6cdf720ddf36"
+        "filename": "PortableGit-2.43.0-64-bit.7z.exe",
+        "url": "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-64-bit.7z.exe",
+        "checksum": "c76216d032685fa972d129eca30f8c9fb957eb9f46ccbce954e70e07d6211961"
       },
       {
         "platform": "windows",
         "arch": "x86",
-        "filename": "MinGit-2.43.0-32-bit.zip",
-        "url": "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/MinGit-2.43.0-32-bit.zip",
-        "checksum": "d46fac9c17b55627f714aefa36c3b00d81651d2bb4076a12b4455b5f841f1a9e"
+        "filename": "PortableGit-2.43.0-32-bit.7z.exe",
+        "url": "https://github.com/git-for-windows/git/releases/download/v2.43.0.windows.1/PortableGit-2.43.0-32-bit.7z.exe",
+        "checksum": "c33f9aa7bf9c59e24db71b65e9d75b1e8532562175afef380119aa1eee90afd1"
       }
     ]
   },

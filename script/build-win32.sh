@@ -22,6 +22,7 @@ GIT_LFS_VERSION=$(jq --raw-output ".[\"git-lfs\"].version[1:]" dependencies.json
 GIT_LFS_CHECKSUM="$(jq --raw-output ".\"git-lfs\".files[] | select(.arch == \"$DEPENDENCY_ARCH\" and .platform == \"windows\") | .checksum" dependencies.json)"
 GIT_LFS_FILENAME="$(jq --raw-output ".\"git-lfs\".files[] | select(.arch == \"$DEPENDENCY_ARCH\" and .platform == \"windows\") | .name" dependencies.json)"
 GIT_FOR_WINDOWS_URL=$(jq --raw-output ".git.packages[] | select(.arch == \"$DEPENDENCY_ARCH\" and .platform == \"windows\") | .url" dependencies.json)
+GIT_FOR_WINDOWS_FILENAME="$(jq --raw-output ".git.packages[] | select(.arch == \"$DEPENDENCY_ARCH\" and .platform == \"windows\") | .filename" dependencies.json)"
 GIT_FOR_WINDOWS_CHECKSUM=$(jq --raw-output ".git.packages[] | select(.arch == \"$DEPENDENCY_ARCH\" and .platform == \"windows\") | .checksum" dependencies.json)
 
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -30,19 +31,21 @@ source "$CURRENT_DIR/compute-checksum.sh"
 
 mkdir -p "$DESTINATION"
 
-echo "-- Downloading MinGit from $GIT_FOR_WINDOWS_URL"
-GIT_FOR_WINDOWS_FILE=git-for-windows.zip
-curl -sL -o $GIT_FOR_WINDOWS_FILE "$GIT_FOR_WINDOWS_URL"
-COMPUTED_SHA256=$(compute_checksum $GIT_FOR_WINDOWS_FILE)
+echo "-- Downloading PortableGit from $GIT_FOR_WINDOWS_URL"
+curl -sL -o "$GIT_FOR_WINDOWS_FILENAME" "$GIT_FOR_WINDOWS_URL"
+COMPUTED_SHA256=$(compute_checksum "$GIT_FOR_WINDOWS_FILENAME")
 if [ "$COMPUTED_SHA256" = "$GIT_FOR_WINDOWS_CHECKSUM" ]; then
-  echo "MinGit: checksums match"
-  unzip -qq $GIT_FOR_WINDOWS_FILE -d "$DESTINATION"
+  echo "PortableGit: checksums match"
+  7z.exe x -o"$DESTINATION" "$GIT_FOR_WINDOWS_FILENAME"
 else
-  echo "MinGit: expected checksum $GIT_FOR_WINDOWS_CHECKSUM but got $COMPUTED_SHA256"
+  echo "PortableGit: expected checksum $GIT_FOR_WINDOWS_CHECKSUM but got $COMPUTED_SHA256"
   echo "aborting..."
   exit 1
 fi
 
+echo "-- Deleting Unneccessary Files"
+cd "$DESTINATION"
+xargs rm -rf <"$CURRENT_DIR/windows-blacklist.txt"
 
 if [[ "$GIT_LFS_VERSION" ]]; then
   # download Git LFS, verify its the right contents, and unpack it
@@ -94,6 +97,7 @@ git config --file "$SYSTEM_CONFIG" core.symlinks "false"
 git config --file "$SYSTEM_CONFIG" core.autocrlf "true"
 git config --file "$SYSTEM_CONFIG" core.fscache "true"
 git config --file "$SYSTEM_CONFIG" http.sslBackend "schannel"
+git config --file "$SYSTEM_CONFIG" credential.helper "manager"
 
 # See https://github.com/desktop/desktop/issues/4817#issuecomment-393241303
 # Even though it's not set openssl will auto-discover the one we ship because
@@ -108,19 +112,6 @@ git config --file "$SYSTEM_CONFIG" --unset http.sslCAInfo
 #
 # details: https://github.com/dscho/git/blob/6152657e1a97c478df97d633c47469043b397519/Documentation/config.txt#L2135
 git config --file "$SYSTEM_CONFIG" http.schannelUseSSLCAInfo "false"
-
-# Git for Windows has started automatically including the config file
-# from c:\Program Files\Git\etc\gitconfig, see
-#
-# https://github.com/git-for-windows/build-extra/commit/475b4538803e6354ba19f334fea40446cf4fdc3f
-#
-# While the notion of being able to inherit some system level config values
-# is appealing it's also scary as we lose our isolation. The way the include
-# section is set up at the moment means that any config value in the Program Files
-# directory takes precedence over ours meaning that we might end up using the
-# openssl backend even though GitHub Desktop requires the schannel backend for
-# certificate bypass to work.
-git config --file "$SYSTEM_CONFIG" --remove-section include
 
 set -eu -o pipefail
 
@@ -138,8 +129,5 @@ if [[ -f "$DESTINATION/etc/gitattributes" ]]; then
 elif [[ -f "$DESTINATION/$MINGW_DIR/etc/gitattributes" ]]; then
   rm "$DESTINATION/$MINGW_DIR/etc/gitattributes"
 fi
-
-echo "-- Removing legacy credential helpers"
-rm "$DESTINATION/$MINGW_DIR/bin/git-credential-wincred.exe"
 
 set +eu

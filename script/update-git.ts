@@ -99,11 +99,11 @@ async function getPackageDetails(
   arch: string
 ) {
   const archValue = arch === 'amd64' ? '64-bit' : '32-bit'
-
-  const minGitFile = assets.find(
-    a => a.name.indexOf('MinGit') !== -1 && a.name.indexOf(archValue) !== -1
+  const portableGitFile = assets.find(
+    a =>
+      a.name.indexOf('PortableGit') !== -1 && a.name.indexOf(archValue) !== -1
   )
-  if (minGitFile == null) {
+  if (portableGitFile == null) {
     const foundFiles = assets.map(a => a.name)
     console.log(
       `🔴 Could not find ${archValue} archive. Found these files instead: ${JSON.stringify(
@@ -113,13 +113,15 @@ async function getPackageDetails(
     return null
   }
 
-  const filename = minGitFile.name
+  const filename = portableGitFile.name
   const checksumRe = new RegExp(`${filename}\\s*\\|\\s*([0-9a-f]{64})`)
   const match = checksumRe.exec(body)
   let checksum: string
   if (match == null || match.length !== 2) {
     console.log(`🔴 No checksum for ${archValue} in release notes body`)
-    checksum = await calculateAssetChecksum(minGitFile.browser_download_url)
+    checksum = await calculateAssetChecksum(
+      portableGitFile.browser_download_url
+    )
     console.log(`✅ Calculated checksum for ${archValue} from downloaded asset`)
   } else {
     console.log(`✅ Got checksum for ${archValue} from release notes body`)
@@ -130,7 +132,7 @@ async function getPackageDetails(
     platform: 'windows',
     arch,
     filename,
-    url: minGitFile.browser_download_url,
+    url: portableGitFile.browser_download_url,
     checksum,
   }
 }

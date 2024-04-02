@@ -101,12 +101,14 @@ mingw64/libexec/git-core/System.ValueTuple.dll
 mingw64/libexec/git-core/tcl86.dll
 mingw64/libexec/git-core/tk86.dll
 mingw64/libexec/git-core/zlib1.dll
+mingw64/share/doc
 post-install.bat
 README.portable
 tmp
 usr/bin/notepad
 usr/bin/rvim
 usr/bin/sshd
+usr/bin/mintty.exe
 usr/bin/vi
 usr/bin/view
 usr/bin/vim.exe

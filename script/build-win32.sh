@@ -14,8 +14,8 @@ if [ "$TARGET_ARCH" = "x64" ]; then
   DEPENDENCY_ARCH="amd64"
   MINGW_DIR="mingw64"
 else
-  DEPENDENCY_ARCH="x86"
-  MINGW_DIR="mingw32"
+  echo "Unsupported architecture"
+  exit 1
 fi
 
 GIT_LFS_VERSION=$(jq --raw-output ".[\"git-lfs\"].version[1:]" dependencies.json)
@@ -45,7 +45,7 @@ fi
 
 echo "-- Deleting Unneccessary Files"
 cd "$DESTINATION"
-cat "$CURRENT_DIR/windows-blacklist.txt" | tr -d '\r' | xargs -d '\n' rm -rf
+tr -d '\r' < "$CURRENT_DIR/windows-blacklist.txt" | xargs -d '\n' rm -rf
 
 if [[ "$GIT_LFS_VERSION" ]]; then
   # download Git LFS, verify its the right contents, and unpack it

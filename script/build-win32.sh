@@ -45,7 +45,7 @@ fi
 
 echo "-- Deleting Unneccessary Files"
 cd "$DESTINATION"
-xargs rm -rf <"$CURRENT_DIR/windows-blacklist.txt"
+cat "$CURRENT_DIR/windows-blacklist.txt" | tr -d '\r' | xargs -d '\n' rm -rf
 
 if [[ "$GIT_LFS_VERSION" ]]; then
   # download Git LFS, verify its the right contents, and unpack it

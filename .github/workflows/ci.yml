@@ -52,6 +52,8 @@ jobs:
         exclude:
           - os: macos-11
             arch: x86
+          - os: windows-2019
+            arch: x86
     timeout-minutes: 20
     steps:
       # We need to use Xcode 11.7 for maximum compatibility with older macOS (x64)

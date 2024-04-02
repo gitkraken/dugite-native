@@ -8,13 +8,6 @@
         "filename": "PortableGit-2.44.0-64-bit.7z.exe",
         "url": "https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/PortableGit-2.44.0-64-bit.7z.exe",
         "checksum": "1fc64ca91b9b475ab0ada72c9f7b3addbe69a6c8f520be31425cf21841cca369"
-      },
-      {
-        "platform": "windows",
-        "arch": "x86",
-        "filename": "PortableGit-2.44.0-32-bit.7z.exe",
-        "url": "https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/PortableGit-2.44.0-32-bit.7z.exe",
-        "checksum": "e70c80672069907961f6db68b0db5e14ea0447f39c74cfd3c385882f3b934c6f"
       }
     ]
   },

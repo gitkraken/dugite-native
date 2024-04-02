@@ -204,13 +204,12 @@ async function run() {
   }
 
   const package64bit = await getPackageDetails(assets, body, 'amd64')
-  const package32bit = await getPackageDetails(assets, body, 'x86')
 
-  if (package64bit == null || package32bit == null) {
+  if (package64bit == null) {
     return
   }
 
-  updateGitDependencies(latestGitVersion, [package64bit, package32bit])
+  updateGitDependencies(latestGitVersion, [package64bit])
 
   console.log(
     `✅ Updated dependencies metadata to Git ${latestGitVersion} (Git for Windows ${version})`

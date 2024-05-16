@@ -1,13 +1,13 @@
 {
   "git": {
-    "version": "v2.44.0",
+    "version": "v2.44.1",
     "packages": [
       {
         "platform": "windows",
         "arch": "amd64",
-        "filename": "PortableGit-2.44.0-64-bit.7z.exe",
-        "url": "https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/PortableGit-2.44.0-64-bit.7z.exe",
-        "checksum": "1fc64ca91b9b475ab0ada72c9f7b3addbe69a6c8f520be31425cf21841cca369"
+        "filename": "PortableGit-2.44.1-64-bit.7z.exe",
+        "url": "https://github.com/git-for-windows/git/releases/download/v2.44.1.windows.1/PortableGit-2.44.1-64-bit.7z.exe",
+        "checksum": "1300ebcd98e91df53f4a0af9bfd955450f7a362aa1e8f6126eb2aa437bf7e497"
       }
     ]
   },

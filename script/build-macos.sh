@@ -75,7 +75,7 @@ if [[ "$GIT_LFS_VERSION" ]]; then
   git clone -b "v$GIT_LFS_VERSION" "https://github.com/git-lfs/git-lfs"
   (
     cd git-lfs
-    make GOARCH="$GOARCH" CGO_CFLAGS="-mmacosx-version-min=$MACOSX_BUILD_VERSION" CGO_LDFLAGS="-mmacosx-version-min=$MACOSX_BUILD_VERSION" BUILTIN_LD_FLAGS="-linkmode external"
+    make GOARCH="$GOARCH" CGO_ENABLED=1 CGO_CFLAGS="-mmacosx-version-min=$MACOSX_BUILD_VERSION" CGO_LDFLAGS="-mmacosx-version-min=$MACOSX_BUILD_VERSION" BUILTIN_LD_FLAGS="-linkmode external"
   )
   GIT_LFS_BINARY_PATH="git-lfs/bin/git-lfs"
   if test -f "$GIT_LFS_BINARY_PATH"; then

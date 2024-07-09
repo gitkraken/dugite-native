@@ -4,10 +4,10 @@ import * as fs from 'fs'
 import { Octokit } from '@octokit/rest'
 
 export default class GenerateReleaseNotes {
-  // seven targeted OS/arch combinations
+  // five targeted OS/arch combinations
   // two files for each targeted OS/arch
   // two checksum files for the previous
-  private SUCCESSFUL_RELEASE_FILE_COUNT = 7 * 2 * 2
+  private SUCCESSFUL_RELEASE_FILE_COUNT = 5 * 2 * 2
   private args = process.argv.slice(2)
   private expectedArgs = [
     {

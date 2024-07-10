@@ -5,14 +5,13 @@
 
 set -eu -o pipefail
 
-MACOSX_BUILD_VERSION="10.9"
+MACOSX_BUILD_VERSION="10.15"
+HOST_CPU=arm64
 
 if [ "$TARGET_ARCH" = "x64" ]; then
-  HOST_CPU=x86_64
   TARGET_CFLAGS="-target x86_64-apple-darwin"
   GOARCH=amd64
 else
-  HOST_CPU=arm64
   TARGET_CFLAGS="-target arm64-apple-darwin"
   GOARCH=arm64
 fi
@@ -76,16 +75,7 @@ if [[ "$GIT_LFS_VERSION" ]]; then
   git clone -b "v$GIT_LFS_VERSION" "https://github.com/git-lfs/git-lfs"
   (
     cd git-lfs
-
-    # HACK: When cross-compiling, there seems to be an issue when git-lfs attempts
-    # to generate the manpage contents, and it seems that preffixing that command
-    # with `GOARCH=` to use the host architecture fixes the issue.
-    # This hack can be removed once the issue is fixed via the PR
-    # https://github.com/git-lfs/git-lfs/pull/4492 or some other solution.
-    GO_GENERATE_STRING="\$(GO) generate github.com\/git-lfs\/git-lfs\/commands"
-    sed -i -e "s/$GO_GENERATE_STRING/GOARCH= $GO_GENERATE_STRING/" Makefile
-
-    make GOARCH="$GOARCH" CGO_CFLAGS="-mmacosx-version-min=$MACOSX_BUILD_VERSION" CGO_LDFLAGS="-mmacosx-version-min=$MACOSX_BUILD_VERSION" BUILTIN_LD_FLAGS="-linkmode external"
+    make GOARCH="$GOARCH" CGO_ENABLED=1 CGO_CFLAGS="-mmacosx-version-min=$MACOSX_BUILD_VERSION" CGO_LDFLAGS="-mmacosx-version-min=$MACOSX_BUILD_VERSION" BUILTIN_LD_FLAGS="-linkmode external"
   )
   GIT_LFS_BINARY_PATH="git-lfs/bin/git-lfs"
   if test -f "$GIT_LFS_BINARY_PATH"; then

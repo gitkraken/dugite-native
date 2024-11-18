@@ -204,7 +204,9 @@ async function run() {
   }
 
   if (!body) {
-    console.log(`🔴 No release notes found for Git for Windows version ${version}`)
+    console.log(
+      `🔴 No release notes found for Git for Windows version ${version}`
+    )
     return
   }
 

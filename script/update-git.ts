@@ -203,6 +203,11 @@ async function run() {
     }
   }
 
+  if (!body) {
+    console.log(`🔴 No release notes found for Git for Windows version ${version}`)
+    return
+  }
+
   const package64bit = await getPackageDetails(assets, body, 'amd64')
 
   if (package64bit == null) {

@@ -163,7 +163,7 @@ export default class GenerateReleaseNotes {
       const match = mergeCommitRegex.exec(mergeCommitMessage)
       if (match != null && match.length === 2) {
         const num = parseInt(match[1])
-        if (num != NaN) {
+        if (!Number.isNaN(num)) {
           pullRequestIds.push(num)
         }
       }
@@ -178,7 +178,7 @@ export default class GenerateReleaseNotes {
         pull_number: pullRequestId,
       })
       const { title, number, user } = result.data
-      const entry = ` - ${title} - #${number} via @${user.login}`
+      const entry = ` - ${title} - #${number} via @${user?.login ?? 'unknown'}`
       releaseNotesEntries.push(entry)
     }
 

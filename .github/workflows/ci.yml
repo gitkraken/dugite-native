@@ -25,10 +25,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-20.04]
+        os: [macos-13, windows-latest, ubuntu-20.04]
         arch: [x64, arm64]
         include:
-          - os: macos-latest
+          - os: macos-13
             friendlyName: macOS
             targetPlatform: macOS
           - os: windows-latest
@@ -42,7 +42,7 @@ jobs:
             arch: arm64
     timeout-minutes: 20
     steps:
-      # We need to use Xcode 14.3 for maximum compatibility with older macOS (x64)
+      # We need to use Xcode 14.3.1 for maximum compatibility with older macOS (x64)
       - name: Switch to oldest available Xcode
         if: matrix.targetPlatform == 'macOS' && matrix.arch == 'x64'
         run: |

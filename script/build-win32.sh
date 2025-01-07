@@ -43,6 +43,25 @@ else
   exit 1
 fi
 
+unset COMPUTED_SHA256
+
+GAWK_URL="https://mirror.msys2.org/msys/x86_64/gawk-5.3.1-1-x86_64.pkg.tar.zst"
+GAWK_FILENAME="gawk-5.3.1-1-x86_64.pkg.tar.zst"
+GAWK_CHECKSUM="9ce65f18c696723278031d05d978b0eb0cb9ee2db2d1d8c2bd5603d050b09096"
+
+echo "-- Upgrading GAWK"
+curl -sL -o "$GAWK_FILENAME" "$GAWK_URL"
+COMPUTED_SHA256=$(compute_checksum "$GAWK_FILENAME")
+if [ "$COMPUTED_SHA256" = "$GAWK_CHECKSUM" ]; then
+  echo "GAWK: checksums match"
+  tar -xvf "$GAWK_FILENAME" -C "$DESTINATION" --exclude="*.BUILDINFO" --exclude="*.MTREE" --exclude="*.PKGINFO"
+  rm "$GAWK_FILENAME"
+else
+  echo "GAWK: expected checksum $GIT_FOR_WINDOWS_CHECKSUM but got $COMPUTED_SHA256"
+  echo "aborting..."
+  exit 1
+fi
+
 echo "-- Deleting Unneccessary Files"
 cd "$DESTINATION"
 tr -d '\r' < "$CURRENT_DIR/windows-blacklist.txt" | xargs -d '\n' rm -rf

@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, windows-latest, ubuntu-20.04]
+        os: [macos-13, windows-latest, ubuntu-22.04]
         arch: [x64, arm64]
         include:
           - os: macos-13
@@ -34,7 +34,7 @@ jobs:
           - os: windows-latest
             friendlyName: Windows
             targetPlatform: win32
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             friendlyName: Linux
             targetPlatform: ubuntu
         exclude:
@@ -79,7 +79,7 @@ jobs:
           echo "deb [arch=arm64,armhf] http://azure.ports.ubuntu.com/ $(lsb_release -s -c)-updates main universe multiverse restricted" | sudo tee -a /etc/apt/sources.list
           sudo dpkg --add-architecture arm64
           sudo apt-get update
-          sudo apt-get install gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libcurl4-gnutls-dev:arm64 zlib1g-dev:arm64 gettext
+          sudo apt-get install gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libcurl4-gnutls-dev:arm64 zlib1g-dev:arm64 libbrotli-dev:arm64 gettext
       - name: Build
         shell: bash
         run: script/build.sh

@@ -72,7 +72,7 @@ source "$CURRENT_DIR/check-static-linking.sh"
 
 echo " -- Building vanilla curl at $CURL_INSTALL_DIR instead of distro-specific version"
 
-CURL_FILE_NAME="curl-7.58.0"
+CURL_FILE_NAME="curl-7.68.0"
 CURL_FILE="$CURL_FILE_NAME.tar.gz"
 
 cd /tmp || exit 1

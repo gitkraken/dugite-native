@@ -66,20 +66,10 @@ jobs:
         run: npm run prettier
       - name: Build tools
         run: npm run check
-      - name: Install extra dependencies for building Git on Ubuntu (x64)
-        if: matrix.targetPlatform == 'ubuntu' && matrix.arch == 'x64'
+      - name: Install ubuntu dependencies
+        if: matrix.targetPlatform == 'ubuntu'
         run: |
-          sudo apt-get update
-          sudo apt-get install libcurl4-gnutls-dev libexpat1-dev gettext
-      - name: Install extra dependencies for building Git on Ubuntu (arm64)
-        if: matrix.targetPlatform == 'ubuntu' && matrix.arch == 'arm64'
-        run: |
-          sudo sed -i "s/^deb/deb [arch=amd64,i386]/g" /etc/apt/sources.list
-          echo "deb [arch=arm64,armhf] http://azure.ports.ubuntu.com/ $(lsb_release -s -c) main universe multiverse restricted" | sudo tee -a /etc/apt/sources.list
-          echo "deb [arch=arm64,armhf] http://azure.ports.ubuntu.com/ $(lsb_release -s -c)-updates main universe multiverse restricted" | sudo tee -a /etc/apt/sources.list
-          sudo dpkg --add-architecture arm64
-          sudo apt-get update
-          sudo apt-get install gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libcurl4-gnutls-dev:arm64 zlib1g-dev:arm64 libbrotli-dev:arm64 gettext
+          sudo apt-get install -y debootstrap
       - name: Build
         shell: bash
         run: script/build.sh

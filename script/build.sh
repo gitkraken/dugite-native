@@ -23,4 +23,5 @@ BASEDIR=$ROOT \
   SOURCE="$ROOT/git" \
   DESTINATION="/tmp/build/git" \
   CURL_INSTALL_DIR="/tmp/build/curl" \
+  SYSROOT_DIR="/tmp/build/sysroot" \
   bash "$SCRIPT"

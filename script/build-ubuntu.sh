@@ -20,41 +20,24 @@ if [[ -z "${CURL_INSTALL_DIR}" ]]; then
   exit 1
 fi
 
+if [[ -z "${SYSROOT_DIR}" ]]; then
+  echo "Required environment variable SYSROOT_DIR was not set"
+  exit 1
+fi
+
 case "$TARGET_ARCH" in
   "x64")
-    # __GLIBC_MINOR__ is used as a feature test macro.  Replace it with the
-    # earliest supported version of glibc 2.17 as was previously the case when building on ubuntu-18.04
-    sudo sed -i 's|\(#define\s\+__GLIBC_MINOR__\)|\1 17 //|' "/usr/include/features.h"
-    # fcntl64() was introduced in glibc 2.28.  Make sure to use fcntl() instead.
-    sudo  sed -i '{N; s/#ifndef __USE_FILE_OFFSET64\(\nextern int fcntl\)/#if 1\1/}' "/usr/include/fcntl.h"
     DEPENDENCY_ARCH="amd64"
-    export CC="gcc"
+    export CC="gcc --sysroot=$SYSROOT_DIR"
     STRIP="strip"
     HOST=""
     TARGET="" ;;
-  "x86")
-    DEPENDENCY_ARCH="x86"
-    export CC="i686-linux-gnu-gcc"
-    STRIP="i686-gnu-strip"
-    HOST="--host=i686-linux-gnu"
-    TARGET="--target=i686-linux-gnu" ;;
   "arm64")
-    # __GLIBC_MINOR__ is used as a feature test macro.  Replace it with the
-    # earliest supported version of glibc 2.17 as was previously the case when building on ubuntu-18.04
-    sudo sed -i 's|\(#define\s\+__GLIBC_MINOR__\)|\1 17 //|' "/usr/aarch64-linux-gnu/include/features.h"
-    # fcntl64() was introduced in glibc 2.28.  Make sure to use fcntl() instead.
-    sudo  sed -i '{N; s/#ifndef __USE_FILE_OFFSET64\(\nextern int fcntl\)/#if 1\1/}' "/usr/aarch64-linux-gnu/include/fcntl.h"
     DEPENDENCY_ARCH="arm64"
     export CC="aarch64-linux-gnu-gcc"
     STRIP="aarch64-linux-gnu-strip"
     HOST="--host=aarch64-linux-gnu"
     TARGET="--target=aarch64-linux-gnu" ;;
-  "arm")
-    DEPENDENCY_ARCH="arm"
-    export CC="arm-linux-gnueabihf-gcc"
-    STRIP="arm-linux-gnueabihf-strip"
-    HOST="--host=arm-linux-gnueabihf"
-    TARGET="--target=arm-linux-gnueabihf" ;;
   *)
     exit 1 ;;
 esac
@@ -70,10 +53,19 @@ source "$CURRENT_DIR/compute-checksum.sh"
 # shellcheck source=script/check-static-linking.sh
 source "$CURRENT_DIR/check-static-linking.sh"
 
+echo " -- Setting up sysroot at $SYSROOT_DIR "
+sudo mkdir -p "$SYSROOT_DIR"
+sudo debootstrap --variant=buildd --arch amd64 \
+    --include=libx11-dev,libxkbfile-dev,libfontconfig1-dev,libcurl4-gnutls-dev,libexpat1-dev,gettext \
+    focal "$SYSROOT_DIR" http://archive.ubuntu.com/ubuntu/
+
 echo " -- Building vanilla curl at $CURL_INSTALL_DIR instead of distro-specific version"
 
 CURL_FILE_NAME="curl-7.68.0"
 CURL_FILE="$CURL_FILE_NAME.tar.gz"
+
+sudo mkdir -p "$CURL_INSTALL_DIR" || exit 1
+sudo chown -R "$USER" "$CURL_INSTALL_DIR" || exit 1
 
 cd /tmp || exit 1
 curl -LO "https://curl.haxx.se/download/$CURL_FILE"
@@ -84,6 +76,9 @@ cd $CURL_FILE_NAME || exit 1
 ./configure --prefix="$CURL_INSTALL_DIR" "$HOST" "$TARGET"
 make install
 )
+
+export CURL_CONFIG="$CURL_INSTALL_DIR/bin/curl-config"
+
 echo " -- Building git at $SOURCE to $DESTINATION"
 
 (

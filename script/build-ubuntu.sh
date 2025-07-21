@@ -28,7 +28,7 @@ fi
 case "$TARGET_ARCH" in
   "x64")
     DEPENDENCY_ARCH="amd64"
-    export CC="gcc --sysroot=$SYSROOT_DIR"
+    export CC="gcc"
     STRIP="strip"
     HOST=""
     TARGET="" ;;
@@ -88,8 +88,8 @@ sudo chown -R "$USER" "$DESTINATION" || exit 1
 cd "$SOURCE" || exit 1
 make clean
 make configure
-CFLAGS='-Wall -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE' \
-  LDFLAGS='-Wl,-Bsymbolic-functions -Wl,-z,relro' ac_cv_iconv_omits_bom=no ac_cv_fread_reads_directories=no ac_cv_snprintf_returns_bogus=no \
+CFLAGS='--sysroot=$SYSROOT_DIR -Wall -g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -U_FORTIFY_SOURCE' \
+  LDFLAGS='--sysroot=$SYSROOT_DIR -L${SYSROOT}/usr/lib -Wl,-Bsymbolic-functions -Wl,-z,relro' ac_cv_iconv_omits_bom=no ac_cv_fread_reads_directories=no ac_cv_snprintf_returns_bogus=no \
   ./configure $HOST \
   --with-curl="$CURL_INSTALL_DIR" \
   --prefix=/

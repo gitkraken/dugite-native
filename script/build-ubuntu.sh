@@ -81,6 +81,9 @@ export CURL_CONFIG="$CURL_INSTALL_DIR/bin/curl-config"
 
 echo " -- Building git at $SOURCE to $DESTINATION"
 
+sudo mkdir -p "$DESTINATION" || exit 1
+sudo chown -R "$USER" "$DESTINATION" || exit 1
+
 (
 cd "$SOURCE" || exit 1
 make clean

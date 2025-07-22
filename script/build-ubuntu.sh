@@ -22,39 +22,17 @@ fi
 
 case "$TARGET_ARCH" in
   "x64")
-    # __GLIBC_MINOR__ is used as a feature test macro.  Replace it with the
-    # earliest supported version of glibc 2.17 as was previously the case when building on ubuntu-18.04
-    sudo sed -i 's|\(#define\s\+__GLIBC_MINOR__\)|\1 17 //|' "/usr/include/features.h"
-    # fcntl64() was introduced in glibc 2.28.  Make sure to use fcntl() instead.
-    sudo  sed -i '{N; s/#ifndef __USE_FILE_OFFSET64\(\nextern int fcntl\)/#if 1\1/}' "/usr/include/fcntl.h"
     DEPENDENCY_ARCH="amd64"
     export CC="gcc"
     STRIP="strip"
     HOST=""
     TARGET="" ;;
-  "x86")
-    DEPENDENCY_ARCH="x86"
-    export CC="i686-linux-gnu-gcc"
-    STRIP="i686-gnu-strip"
-    HOST="--host=i686-linux-gnu"
-    TARGET="--target=i686-linux-gnu" ;;
   "arm64")
-    # __GLIBC_MINOR__ is used as a feature test macro.  Replace it with the
-    # earliest supported version of glibc 2.17 as was previously the case when building on ubuntu-18.04
-    sudo sed -i 's|\(#define\s\+__GLIBC_MINOR__\)|\1 17 //|' "/usr/aarch64-linux-gnu/include/features.h"
-    # fcntl64() was introduced in glibc 2.28.  Make sure to use fcntl() instead.
-    sudo  sed -i '{N; s/#ifndef __USE_FILE_OFFSET64\(\nextern int fcntl\)/#if 1\1/}' "/usr/aarch64-linux-gnu/include/fcntl.h"
     DEPENDENCY_ARCH="arm64"
     export CC="aarch64-linux-gnu-gcc"
     STRIP="aarch64-linux-gnu-strip"
     HOST="--host=aarch64-linux-gnu"
     TARGET="--target=aarch64-linux-gnu" ;;
-  "arm")
-    DEPENDENCY_ARCH="arm"
-    export CC="arm-linux-gnueabihf-gcc"
-    STRIP="arm-linux-gnueabihf-strip"
-    HOST="--host=arm-linux-gnueabihf"
-    TARGET="--target=arm-linux-gnueabihf" ;;
   *)
     exit 1 ;;
 esac

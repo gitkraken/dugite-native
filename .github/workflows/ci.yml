@@ -22,6 +22,7 @@ jobs:
   build:
     name: ${{ matrix.friendlyName }} ${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.image }}
     strategy:
       fail-fast: false
       matrix:
@@ -37,11 +38,24 @@ jobs:
           - os: ubuntu-22.04
             friendlyName: Linux
             targetPlatform: ubuntu
+            image: 'ubuntu:20.04'
         exclude:
           - os: windows-latest
             arch: arm64
     timeout-minutes: 20
     steps:
+      - name: Install dependencies into dockerfile on Ubuntu
+        if: matrix.targetPlatform == 'ubuntu'
+        run: |
+          apt update
+          apt install -y software-properties-common lsb-release sudo wget curl build-essential jq autoconf automake pkg-config ca-certificates
+          sudo add-apt-repository ppa:git-core/ppa -y
+          sudo apt update
+          sudo apt install -y git
+          curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          # avoid "fatal: detected dubious ownership in repository at '/__w/dugite-native/dugite-native'" error
+          git config --global --add safe.directory '*'
       # We need to use Xcode 14.3.1 for maximum compatibility with older macOS (x64)
       - name: Switch to oldest available Xcode
         if: matrix.targetPlatform == 'macOS' && matrix.arch == 'x64'

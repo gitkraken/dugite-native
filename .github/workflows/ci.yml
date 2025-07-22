@@ -83,7 +83,7 @@ jobs:
         if: matrix.targetPlatform == 'ubuntu' && matrix.arch == 'x64'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libcurl4-gnutls-dev libexpat1-dev  zlib1g-dev gettext
+          sudo apt-get install -y libcurl4-gnutls-dev libexpat1-dev  zlib1g-dev gettext libssl-dev
       - name: Install extra dependencies for building Git on Ubuntu (arm64)
         if: matrix.targetPlatform == 'ubuntu' && matrix.arch == 'arm64'
         run: |

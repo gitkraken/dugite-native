@@ -22,6 +22,7 @@ jobs:
   build:
     name: ${{ matrix.friendlyName }} ${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.image }}
     strategy:
       fail-fast: false
       matrix:
@@ -37,11 +38,23 @@ jobs:
           - os: ubuntu-22.04
             friendlyName: Linux
             targetPlatform: ubuntu
+            image: 'ubuntu:20.04'
         exclude:
           - os: windows-latest
             arch: arm64
     timeout-minutes: 20
     steps:
+      - name: Install dependencies into dockerfile on Ubuntu
+        if: matrix.targetPlatform == 'ubuntu'
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common lsb-release sudo wget curl build-essential jq autoconf automake pkg-config ca-certificates
+          sudo add-apt-repository ppa:git-core/ppa -y
+          sudo apt-get update
+          sudo apt-get install -y git
+          curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+          sudo apt-get install -y nodejs
+          git config --global --add safe.directory '*'
       # We need to use Xcode 14.3.1 for maximum compatibility with older macOS (x64)
       - name: Switch to oldest available Xcode
         if: matrix.targetPlatform == 'macOS' && matrix.arch == 'x64'
@@ -70,7 +83,7 @@ jobs:
         if: matrix.targetPlatform == 'ubuntu' && matrix.arch == 'x64'
         run: |
           sudo apt-get update
-          sudo apt-get install libcurl4-gnutls-dev libexpat1-dev gettext
+          sudo apt-get install -y libcurl4-gnutls-dev libexpat1-dev  zlib1g-dev gettext libssl-dev
       - name: Install extra dependencies for building Git on Ubuntu (arm64)
         if: matrix.targetPlatform == 'ubuntu' && matrix.arch == 'arm64'
         run: |
@@ -79,7 +92,7 @@ jobs:
           echo "deb [arch=arm64,armhf] http://azure.ports.ubuntu.com/ $(lsb_release -s -c)-updates main universe multiverse restricted" | sudo tee -a /etc/apt/sources.list
           sudo dpkg --add-architecture arm64
           sudo apt-get update
-          sudo apt-get install gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libcurl4-gnutls-dev:arm64 zlib1g-dev:arm64 libbrotli-dev:arm64 gettext
+          sudo apt-get install -y gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu libcurl4-gnutls-dev:arm64 zlib1g-dev:arm64 libbrotli-dev:arm64 gettext
       - name: Build
         shell: bash
         run: script/build.sh

@@ -10,13 +10,17 @@ if [[ -z "${DESTINATION}" ]]; then
   exit 1
 fi
 
-if [ "$TARGET_ARCH" = "x64" ]; then
-  DEPENDENCY_ARCH="amd64"
-  MINGW_DIR="mingw64"
-else
-  echo "Unsupported architecture"
-  exit 1
-fi
+case "$TARGET_ARCH" in
+  "x64")
+    DEPENDENCY_ARCH="amd64"
+    MINGW_DIR="mingw64";;
+  "arm64")
+    DEPENDENCY_ARCH="arm64"
+    MINGW_DIR="clangarm64";;
+  *)
+    echo "Unsupported architecture: $TARGET_ARCH"
+    exit 1 ;;
+esac
 
 GIT_LFS_VERSION=$(jq --raw-output ".[\"git-lfs\"].version[1:]" dependencies.json)
 GIT_LFS_CHECKSUM="$(jq --raw-output ".\"git-lfs\".files[] | select(.arch == \"$DEPENDENCY_ARCH\" and .platform == \"windows\") | .checksum" dependencies.json)"

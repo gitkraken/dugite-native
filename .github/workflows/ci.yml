@@ -39,9 +39,6 @@ jobs:
             friendlyName: Linux
             targetPlatform: ubuntu
             image: 'ubuntu:20.04'
-        exclude:
-          - os: windows-latest
-            arch: arm64
     timeout-minutes: 20
     steps:
       - name: Install dependencies into dockerfile on Ubuntu

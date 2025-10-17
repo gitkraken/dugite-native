@@ -1,49 +1,49 @@
 {
   "git": {
-    "version": "v2.51.0",
+    "version": "v2.51.1",
     "packages": [
       {
         "platform": "windows",
         "arch": "amd64",
-        "filename": "PortableGit-2.51.0.2-64-bit.7z.exe",
-        "url": "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.2/PortableGit-2.51.0.2-64-bit.7z.exe",
-        "checksum": "85d6e9f865b73827e22d532fd6cd5b93987c8d264142786b0721956619d5c00e"
+        "filename": "PortableGit-2.51.1-64-bit.7z.exe",
+        "url": "https://github.com/git-for-windows/git/releases/download/v2.51.1.windows.1/PortableGit-2.51.1-64-bit.7z.exe",
+        "checksum": "2a1108dd87bd9d7fc168f76f0f2d7b77a44ca49f42c7a3a081b9fcbbbb75473b"
       },
       {
         "platform": "windows",
         "arch": "arm64",
-        "filename": "PortableGit-2.51.0.2-arm64.7z.exe",
-        "url": "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.2/PortableGit-2.51.0.2-arm64.7z.exe",
-        "checksum": "f35e795224349c63b7d6c429c2d8404a6ce7e2e8f91934a3f6ba2ca8e7e285a8"
+        "filename": "PortableGit-2.51.1-arm64.7z.exe",
+        "url": "https://github.com/git-for-windows/git/releases/download/v2.51.1.windows.1/PortableGit-2.51.1-arm64.7z.exe",
+        "checksum": "0703b02416ff2dd7940a705fc078d04ebc7093889ecc798be4029ee9c5341e70"
       }
     ]
   },
   "git-lfs": {
-    "version": "v3.7.0",
+    "version": "v3.7.1",
     "files": [
       {
         "platform": "linux",
         "arch": "amd64",
-        "name": "git-lfs-linux-amd64-v3.7.0.tar.gz",
-        "checksum": "e7ebba491af8a54e560be3a00666fa97e4cf2bbbb223178a0934b8ef74cf9bed"
+        "name": "git-lfs-linux-amd64-v3.7.1.tar.gz",
+        "checksum": "1c0b6ee5200ca708c5cebebb18fdeb0e1c98f1af5c1a9cba205a4c0ab5a5ec08"
       },
       {
         "platform": "linux",
         "arch": "arm64",
-        "name": "git-lfs-linux-arm64-v3.7.0.tar.gz",
-        "checksum": "88c24cb0c772cb6570e70f336ef4bb7b6539c5fb9ebeda563e9a5458ca82a98e"
+        "name": "git-lfs-linux-arm64-v3.7.1.tar.gz",
+        "checksum": "73a9c90eeb4312133a63c3eaee0c38c019ea7bfa0953d174809d25b18588dd8d"
       },
       {
         "platform": "windows",
         "arch": "amd64",
-        "name": "git-lfs-windows-amd64-v3.7.0.zip",
-        "checksum": "10be221ee5a76c6f4fc4d5b0c84d9b6f97b0db4815fb39a1b9579f04d37379ec"
+        "name": "git-lfs-windows-amd64-v3.7.1.zip",
+        "checksum": "8683cdc3d6c029b49393dcebbaa6265bd6efd9abdcf837be855b4cd42e5e80b6"
       },
       {
         "platform": "windows",
         "arch": "arm64",
-        "name": "git-lfs-windows-arm64-v3.7.0.zip",
-        "checksum": "ec56aef19f3bcd33a239046a82b81a9844db2f66294434c5c54a470aa28ee669"
+        "name": "git-lfs-windows-arm64-v3.7.1.zip",
+        "checksum": "9441383a3928a7f387223711929292a46ace95580ceed443d61e7b8a4d9615c3"
       }
     ]
   }

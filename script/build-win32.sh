@@ -10,13 +10,17 @@ if [[ -z "${DESTINATION}" ]]; then
   exit 1
 fi
 
-if [ "$TARGET_ARCH" = "x64" ]; then
-  DEPENDENCY_ARCH="amd64"
-  MINGW_DIR="mingw64"
-else
-  echo "Unsupported architecture"
-  exit 1
-fi
+case "$TARGET_ARCH" in
+  "x64")
+    DEPENDENCY_ARCH="amd64"
+    MINGW_DIR="mingw64";;
+  "arm64")
+    DEPENDENCY_ARCH="arm64"
+    MINGW_DIR="clangarm64";;
+  *)
+    echo "Unsupported architecture: $TARGET_ARCH"
+    exit 1 ;;
+esac
 
 GIT_LFS_VERSION=$(jq --raw-output ".[\"git-lfs\"].version[1:]" dependencies.json)
 GIT_LFS_CHECKSUM="$(jq --raw-output ".\"git-lfs\".files[] | select(.arch == \"$DEPENDENCY_ARCH\" and .platform == \"windows\") | .checksum" dependencies.json)"
@@ -44,23 +48,6 @@ else
 fi
 
 unset COMPUTED_SHA256
-
-GAWK_URL="https://mirror.msys2.org/msys/x86_64/gawk-5.3.1-1-x86_64.pkg.tar.zst"
-GAWK_FILENAME="gawk-5.3.1-1-x86_64.pkg.tar.zst"
-GAWK_CHECKSUM="9ce65f18c696723278031d05d978b0eb0cb9ee2db2d1d8c2bd5603d050b09096"
-
-echo "-- Upgrading GAWK"
-curl -sL -o "$GAWK_FILENAME" "$GAWK_URL"
-COMPUTED_SHA256=$(compute_checksum "$GAWK_FILENAME")
-if [ "$COMPUTED_SHA256" = "$GAWK_CHECKSUM" ]; then
-  echo "GAWK: checksums match"
-  tar -xvf "$GAWK_FILENAME" -C "$DESTINATION" --exclude="*.BUILDINFO" --exclude="*.MTREE" --exclude="*.PKGINFO"
-  rm "$GAWK_FILENAME"
-else
-  echo "GAWK: expected checksum $GIT_FOR_WINDOWS_CHECKSUM but got $COMPUTED_SHA256"
-  echo "aborting..."
-  exit 1
-fi
 
 echo "-- Deleting Unneccessary Files"
 cd "$DESTINATION"

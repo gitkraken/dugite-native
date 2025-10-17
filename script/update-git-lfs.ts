@@ -84,6 +84,7 @@ async function run(): Promise<boolean> {
     `git-lfs-linux-amd64-${version}.tar.gz`,
     `git-lfs-linux-arm64-${version}.tar.gz`,
     `git-lfs-windows-amd64-${version}.zip`,
+    `git-lfs-windows-arm64-${version}.zip`,
   ]
 
   const newFiles = []

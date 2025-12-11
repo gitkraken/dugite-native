@@ -40,6 +40,8 @@ mingw64/libexec/git-core/Avalonia.Skia.dll
 clangarm64/libexec/git-core/Avalonia.Skia.dll
 mingw64/libexec/git-core/Avalonia.Themes.Fluent.dll
 clangarm64/libexec/git-core/Avalonia.Themes.Fluent.dll
+mingw64/libexec/git-core/Avalonia.Vulkan.dll
+clangarm64/libexec/git-core/Avalonia.Vulkan.dll
 mingw64/libexec/git-core/Avalonia.Win32.dll
 clangarm64/libexec/git-core/Avalonia.Win32.dll
 mingw64/libexec/git-core/edit.dll
@@ -198,6 +200,16 @@ mingw64/libexec/git-core/tk86.dll
 clangarm64/libexec/git-core/tk86.dll
 mingw64/libexec/git-core/zlib1.dll
 clangarm64/libexec/git-core/zlib1.dll
+mingw64/libexec/git-core/System.Security.Principal.Windows.dll
+clangarm64/libexec/git-core/System.Security.Principal.Windows.dll
+mingw64/libexec/git-core/System.Security.Cryptography.ProtectedData.dll
+clangarm64/libexec/git-core/System.Security.Cryptography.ProtectedData.dll
+mingw64/libexec/git-core/System.Security.AccessControl.dll
+clangarm64/libexec/git-core/System.Security.AccessControl.dll
+mingw64/libexec/git-core/System.IO.FileSystem.AccessControl.dll
+clangarm64/libexec/git-core/System.IO.FileSystem.AccessControl.dll
+mingw64/libexec/git-core/System.Diagnostics.DiagnosticSource.dll
+clangarm64/libexec/git-core/System.Diagnostics.DiagnosticSource.dll
 mingw64/share/doc
 clangarm64/share/doc
 mingw64/share/perl5

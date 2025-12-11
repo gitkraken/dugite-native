@@ -26,10 +26,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13, windows-latest, ubuntu-22.04]
+        os: [macos-14, windows-latest, ubuntu-22.04]
         arch: [x64, arm64]
         include:
-          - os: macos-13
+          - os: macos-14
             friendlyName: macOS
             targetPlatform: macOS
           - os: windows-latest
@@ -56,7 +56,7 @@ jobs:
       - name: Switch to oldest available Xcode
         if: matrix.targetPlatform == 'macOS' && matrix.arch == 'x64'
         run: |
-          sudo xcode-select -s /Applications/Xcode_14.3.1.app/Contents/Developer/
+          sudo xcode-select -s /Applications/Xcode_15.4.0.app/Contents/Developer/
           # Delete the command line tools to make sure they don't get our builds
           # messed up with macOS SDK stuff.
           sudo rm -rf /Library/Developer/CommandLineTools

@@ -51,7 +51,12 @@ unset COMPUTED_SHA256
 
 echo "-- Deleting Unneccessary Files"
 cd "$DESTINATION"
-tr -d '\r' < "$CURRENT_DIR/windows-blacklist.txt" | xargs -d '\n' rm -rf
+while read -r file; do
+  if [ -f "$file" ]; then
+    rm -f "$file"
+    echo "Removed $file"
+  fi
+done < <(tr -d '\r' < "$CURRENT_DIR/windows-blacklist.txt")
 
 if [[ "$GIT_LFS_VERSION" ]]; then
   # download Git LFS, verify its the right contents, and unpack it

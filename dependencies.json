@@ -1,20 +1,20 @@
 {
   "git": {
-    "version": "v2.53.0",
+    "version": "v2.54.0",
     "packages": [
       {
         "platform": "windows",
         "arch": "amd64",
-        "filename": "PortableGit-2.53.0-64-bit.7z.exe",
-        "url": "https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.1/PortableGit-2.53.0-64-bit.7z.exe",
-        "checksum": "08713a710ec91ac90de1c09f861289a3b103175f098676e5e664c04dd6c6bf23"
+        "filename": "PortableGit-2.54.0-64-bit.7z.exe",
+        "url": "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/PortableGit-2.54.0-64-bit.7z.exe",
+        "checksum": "bea006a6cc69673f27b1647e84ab3a68e912fbc175ab6320c5987e012897f311"
       },
       {
         "platform": "windows",
         "arch": "arm64",
-        "filename": "PortableGit-2.53.0-arm64.7z.exe",
-        "url": "https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.1/PortableGit-2.53.0-arm64.7z.exe",
-        "checksum": "dc59b7383104d57110e370638854cc1b1fd50de0fa6d293dc941f35094594298"
+        "filename": "PortableGit-2.54.0-arm64.7z.exe",
+        "url": "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/PortableGit-2.54.0-arm64.7z.exe",
+        "checksum": "f8e92cd3359fcbb96998cfd606a536ccc6dbfb23c04e12b29042f9ba45b6b0c7"
       }
     ]
   },

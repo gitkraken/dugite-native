@@ -7,7 +7,7 @@ export default class GenerateReleaseNotes {
   // five targeted OS/arch combinations
   // two files for each targeted OS/arch
   // two checksum files for the previous
-  private SUCCESSFUL_RELEASE_FILE_COUNT = 5 * 2 * 2
+  private SUCCESSFUL_RELEASE_FILE_COUNT = 6 * 2 * 2
   private args = process.argv.slice(2)
   private expectedArgs = [
     {
@@ -163,7 +163,7 @@ export default class GenerateReleaseNotes {
       const match = mergeCommitRegex.exec(mergeCommitMessage)
       if (match != null && match.length === 2) {
         const num = parseInt(match[1])
-        if (num != NaN) {
+        if (!Number.isNaN(num)) {
           pullRequestIds.push(num)
         }
       }
@@ -178,7 +178,7 @@ export default class GenerateReleaseNotes {
         pull_number: pullRequestId,
       })
       const { title, number, user } = result.data
-      const entry = ` - ${title} - #${number} via @${user.login}`
+      const entry = ` - ${title} - #${number} via @${user?.login ?? 'unknown'}`
       releaseNotesEntries.push(entry)
     }
 

@@ -96,9 +96,13 @@ async function calculateAssetChecksum(uri: string) {
 async function getPackageDetails(
   assets: ReleaseAssets,
   body: string,
-  arch: string
+  arch: 'amd64' | 'arm64'
 ) {
-  const archValue = arch === 'amd64' ? '64-bit' : '32-bit'
+  const archValue = {
+    amd64: '64-bit',
+    arm64: 'arm64',
+  }[arch]
+
   const portableGitFile = assets.find(
     a =>
       a.name.indexOf('PortableGit') !== -1 && a.name.indexOf(archValue) !== -1
@@ -203,13 +207,21 @@ async function run() {
     }
   }
 
-  const package64bit = await getPackageDetails(assets, body, 'amd64')
-
-  if (package64bit == null) {
+  if (!body) {
+    console.log(
+      `🔴 No release notes found for Git for Windows version ${version}`
+    )
     return
   }
 
-  updateGitDependencies(latestGitVersion, [package64bit])
+  const packageX64 = await getPackageDetails(assets, body, 'amd64')
+  const packageARM64 = await getPackageDetails(assets, body, 'arm64')
+
+  if (packageX64 == null || packageARM64 == null) {
+    return
+  }
+
+  updateGitDependencies(latestGitVersion, [packageX64, packageARM64])
 
   console.log(
     `✅ Updated dependencies metadata to Git ${latestGitVersion} (Git for Windows ${version})`

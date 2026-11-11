@@ -13,7 +13,7 @@ fi
 case "$TARGET_ARCH" in
   "x64")
     DEPENDENCY_ARCH="amd64"
-    MINGW_DIR="mingw64";;
+    MINGW_DIR="ucrt64";;
   "arm64")
     DEPENDENCY_ARCH="arm64"
     MINGW_DIR="clangarm64";;
@@ -72,7 +72,7 @@ if [[ "$GIT_LFS_VERSION" ]]; then
     unzip -j $GIT_LFS_FILE -x '*.md' -d "$SUBFOLDER"
 
     if [[ ! -f "$SUBFOLDER/git-lfs.exe" ]]; then
-      echo "After extracting Git LFS the file was not found under /mingw64/libexec/git-core/"
+      echo "After extracting Git LFS the file was not found under /$MINGW_DIR/libexec/git-core/"
       echo "aborting..."
       exit 1
     fi

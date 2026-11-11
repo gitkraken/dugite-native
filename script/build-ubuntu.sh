@@ -79,6 +79,7 @@ DESTDIR="$DESTINATION" \
   NO_GETTEXT=1 \
   NO_INSTALL_HARDLINKS=1 \
   NO_R_TO_GCC_LINKER=1 \
+  NO_RUST=1 \
   make strip install
 )
 

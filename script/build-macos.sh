@@ -61,6 +61,7 @@ echo "-- Building git at $SOURCE to $DESTINATION"
     HOST_CPU="$HOST_CPU" \
     CURL_CONFIG=/usr/bin/curl-config \
     NO_PERL=1 \
+    NO_RUST=1 \
     NO_TCLTK=1 \
     NO_GETTEXT=1 \
     NO_DARWIN_PORTS=1 \
